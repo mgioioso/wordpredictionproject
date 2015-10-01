@@ -1,0 +1,71 @@
+---
+title: "Capstone_Milestone1"
+author: "Marisa Gioioso"
+date: "July 26, 2015"
+output: html_document
+---
+
+### Summary
+This milestone report is a description of exploratory analysis and plans for the prediction model for the Data Science Capstone project. The purpose of this work is to create a word prediction engine based on free text sample data taken from three sources: Twitter, blogs, and news. 
+
+### Exploratory analysis
+
+```{r, cache=TRUE}
+library(stringr)
+nTlines <- system('wc -l ../data/en_US/en_US.twitter.txt', intern=TRUE)
+nTlines <- as.numeric(str_split(str_trim(nTlines), pattern=" ")[[1]][1])
+nTwords <- system('wc -w ../data/en_US/en_US.twitter.txt', intern=TRUE)
+nTwords <- as.numeric(str_split(str_trim(nTwords), pattern=" ")[[1]][1])
+nBlines <- system('wc -l ../data/en_US/en_US.blogs.txt', intern=TRUE)
+nBlines <- as.numeric(str_split(str_trim(nBlines), pattern=" ")[[1]][1])
+nBwords <- system('wc -w ../data/en_US/en_US.blogs.txt', intern=TRUE)
+nBwords <- as.numeric(str_split(str_trim(nBwords), pattern=" ")[[1]][1])
+nNlines <- system('wc -l ../data/en_US/en_US.news.txt', intern=TRUE)
+nNlines <- as.numeric(str_split(str_trim(nNlines), pattern=" ")[[1]][1])
+nNwords <- system('wc -w ../data/en_US/en_US.news.txt', intern=TRUE)
+nNwords <- as.numeric(str_split(str_trim(nNwords), pattern=" ")[[1]][1])
+```
+
+The twitter file has $`r formatC(nTlines,format="fg", big.mark = ",")`$ lines and $`r formatC(nTwords,format="fg", big.mark = ",")`$ words.
+The blogs file has $`r formatC(nBlines,format="fg", big.mark = ",")`$ lines and $`r formatC(nBwords,format="fg", big.mark = ",")`$ words.
+The news file has $`r formatC(nNlines,format="fg", big.mark = ",")`$ lines and $`r formatC(nNwords,format="fg", big.mark = ",")`$ words.
+
+These files are sufficiently large that loading them all into memory to generate word tables takes a very very long time or may be impossible. Instead, we can explore a subset of the files. From a glance of the content of each file, it is clear that the lines of each file are randomly placed and one line does not have anything to do with the one prior or following. Since they appear to already be a random collection of lines, we can just read a contiguous initial subset and be assured it is random. This random subset will be converted to a Text Mining (tm) Corpus and the analysis will be performed on that. Since the blogs file has a disproportionately larger number of words per line, let's take a smaller number of lines from that.
+
+```{r, cache=TRUE, message=FALSE}
+library(tm)
+twit <- readLines(con='../data/en_US/en_US.twitter.txt', n=1000)
+blog <- readLines(con='../data/en_US/en_US.blogs.txt', n=500)
+news <- readLines(con='../data/en_US/en_US.news.txt', n=1000)
+
+all <- c(twit, blog, news)
+corpus <- Corpus(VectorSource(all))
+```
+
+With this subset of data, let's run some statistics revealing word usage and correlation.
+```{r, message=FALSE}
+library(tm)
+library(Rgraphviz)
+length(corpus)
+
+# transformations to do stemming, stopword removal, etc
+US_clean <- tm_map(corpus, stemDocument)
+US_clean <- tm_map(US_clean, removeWords, stopwords("english"))
+US_clean <- tm_map(US_clean, removePunctuation)
+
+tdm <- TermDocumentMatrix(US_clean)
+freqs <- sort(rowSums(as.matrix(tdm)), decreasing=TRUE)
+barplot(freqs[1:10], main="Most frequent terms", ylab="Frequencies")
+
+sum(freqs==1)
+sum(freqs==1)/length(freqs)
+```
+
+The plot shows the frequencies of the 10 most frequent terms. Also, printed out is the number of words that occur only once, $`r sum(freqs==1)/length(freqs)`$% of the data set. This is going to be a significant issue later, because even though this sample contains `r length(freqs)` unique terms, a huge proportion of them occur only once, making it unlikely that next word prediction is going to be successful on those terms. Of course, only a small sample of the whole data set has been selected here, so in the case of the full data set, this percentage will hopefully go down, but it depends on how creative the users were with their word usage. 
+
+### Plans for prediction model
+As outlined in the Stanford NLP coursera class, word prediction models are generally made up of a term document matrix and a markov model. The markov model makes a simplification assumption that the value of the next word is based entirely on only the last word or the last few words. In reality, sentence structure can be very complicated and the next word may depend strongly on, for example, the last word in a prior sentence clause. For models that take a semantic approach, this structure can be parsed to gain a better prediction of the next word. The current analysis will be strictly statistical, and in fact, decent prediction can still be made with a markov model.
+
+Once a basic prediction model is created, we can try to use WordNet to produce synonyms. For example, instead of just searching for the last word the user wrote in the bigram table to determine the most likely next word, the last word's synonyms can also be searched in the table, and the most likely word to follow any of the synonyms would be used instead. This would be useful for words that occur infrequently and for which a straightforward prediction from the bigram table might not be very accurate or extrapolate well to new texts.
+
+

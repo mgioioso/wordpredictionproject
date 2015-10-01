@@ -1,0 +1,8 @@
+name: wordPredictionApp
+account: mgioioso
+server: shinyapps.io
+bundleId: 248074
+url: https://mgioioso.shinyapps.io/wordPredictionApp
+when: 1440304570.1653
+asMultiple: FALSE
+asStatic: FALSE

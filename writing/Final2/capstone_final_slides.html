@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Capstone Word Prediction Application</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Capstone Word Prediction Application">
+  <meta name="author" content="Marisa Gioioso">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="http://slidifylibraries2.googlecode.com/git/inst/libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="http://slidifylibraries2.googlecode.com/git/inst/libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/js/slides" 
+    src="http://slidifylibraries2.googlecode.com/git/inst/libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>Capstone Word Prediction Application</h1>
+    <h2>Description of my Shiny app</h2>
+    <p>Marisa Gioioso<br/></p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:lightblue;">
+  <hgroup>
+    <h2>The Need for Word Prediction</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>Next word prediction is used extensively in the interaction
+between humans and machines, such as:</p>
+
+<ul>
+<li>Word completion of natural language input for search apps</li>
+<li>Aid to user typing on a phone keyboard to speed up input</li>
+</ul>
+
+<p>Some issues that make this problem complex:</p>
+
+<ul>
+<li>Sentences can have complex structure with multiple phrases and many possibilities for ordering of words</li>
+<li>The English language has a plethora of irregular words and phrasing, as well as slang</li>
+</ul>
+
+<p>Yet, fairly good word prediction can be achieved
+by using only a few prior words in the phrase as predictors
+ for the next word.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-2" style="background:lightblue;">
+  <hgroup>
+    <h2>Introducing the Word Prediction App</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The word prediction app consists of:</p>
+
+<ul>
+<li>A text box in which the user can enter a phrase</li>
+<li>A button to enable prediction once the complete phrase has been entered</li>
+<li>A Select box, displaying the word that the app finds the most likely next word. 
+
+<ul>
+<li>When the choice box is selected, other highly likely words can also be viewed</li>
+</ul></li>
+<li>A word cloud graphically displaying the most likely word and the other highly likely predicted next words</li>
+</ul>
+
+<p>The ability to select from a list of likely words gives the user options for next words.</p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:lightblue;">
+  <hgroup>
+    <h2>Approach</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>The app is using a typical approach to word prediction, namely:</p>
+
+<ul>
+<li>Clean an input data set of phrases taken from Twitter, blogs, and the news</li>
+<li>Tokenize the cleaned words, and extract and count ngrams of size 1-5</li>
+<li>Generate a probability for each ngram consisting of:
+\[Prob = count(Ngram)/count((N-1)gram)\]
+where \(count(Ngram)\) is the frequency of that full ngram in the corpus and \(count((N-1)gram)\) is the frequency of the first \(N-1\) words in the ngram.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:lightblue;">
+  <hgroup>
+    <h2>Conclusion and Future Work</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Once loaded, the app is fast through extensive use of data.table library</li>
+<li>In next steps, the user interface will collect user words from phrases and also as corrections when the prediction is not accurate
+
+<ul>
+<li>The new ngrams will be added to the existing data sets and provide new high-value data from the user</li>
+<li>In this way, the app will customize itelf for the set of users that use it</li>
+</ul></li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='The Need for Word Prediction'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Introducing the Word Prediction App'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Approach'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Conclusion and Future Work'>
+         4
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="http://slidifylibraries2.googlecode.com/git/inst/libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>
